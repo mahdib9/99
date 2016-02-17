@@ -1,193 +1,89 @@
-local function set_bot_photo(msg, success, result)
-  local receiver = get_receiver(msg)
-  if success then
-    local file = 'data/photos/bot.jpg'
-    print('File downloaded to:', result)
-    os.rename(result, file)
-    print('File moved to:', file)
-    set_profile_photo(file, ok_cb, false)
-    send_large_msg(receiver, 'عکس پروفایل ربات تغییر کرد', ok_cb, false)
-    redis:del("bot:photo")
-  else
-    print('Error downloading: '..msg.id)
-    send_large_msg(receiver, 'Failed, please try again!', ok_cb, false)
-  end
-end
-local function parsed_url(link)
-  local parsed_link = URL.parse(link)
-  local parsed_path = URL.parse_path(parsed_link.path)
-  return parsed_path[2]
-end
-local function get_contact_list_callback (cb_extra, success, result)
-  local text = " "
-  for k,v in pairs(result) do
-    if v.print_name and v.id and v.phone then
-      text = text..string.gsub(v.print_name ,  "_" , " ").." ["..v.id.."] = "..v.phone.."\n"
+do
+local function pairsByKeys (t, f)
+      local a = {}
+      for n in pairs(t) do table.insert(a, n) end
+      table.sort(a, f)
+      local i = 0      -- iterator variable
+      local iter = function ()   -- iterator function
+        i = i + 1
+        if a[i] == nil then return nil
+        else return a[i], t[a[i]]
+        end
+      end
+      return iter
     end
-  end
-  local file = io.open("contact_list.txt", "w")
-  file:write(text)
-  file:flush()
-  file:close()
-  send_document("user#id"..cb_extra.target,"contact_list.txt", ok_cb, false)--.txt format
-  local file = io.open("contact_list.json", "w")
-  file:write(json:encode_pretty(result))
-  file:flush()
-  file:close()
-  send_document("user#id"..cb_extra.target,"contact_list.json", ok_cb, false)--json format
-end
-local function user_info_callback(cb_extra, success, result)
-  result.access_hash = nil
-  result.flags = nil
-  result.phone = nil
-  if result.username then
-    result.username = '@'..result.username
-  end
-  result.print_name = result.print_name:gsub("_","")
-  local text = serpent.block(result, {comment=false})
-  text = text:gsub("[{}]", "")
-  text = text:gsub('"', "")
-  text = text:gsub(",","")
-  if cb_extra.msg.to.type == "chat" then
-    send_large_msg("chat#id"..cb_extra.msg.to.id, text)
-  else
-    send_large_msg("user#id"..cb_extra.msg.to.id, text)
-  end
-end
-local function get_dialog_list_callback(cb_extra, success, result)
-  local text = ""
-  for k,v in pairs(result) do
-    if v.peer then
-      if v.peer.type == "chat" then
-        text = text.."group{"..v.peer.title.."}["..v.peer.id.."]("..v.peer.members_num..")"
-      else
-        if v.peer.print_name and v.peer.id then
-          text = text.."user{"..v.peer.print_name.."}["..v.peer.id.."]"
-        end
-        if v.peer.username then
-          text = text.."("..v.peer.username..")"
-        end
-        if v.peer.phone then
-          text = text.."'"..v.peer.phone.."'"
-        end
-      end
-    end
-    if v.message then
-      text = text..'\nlast msg >\nmsg id = '..v.message.id
-      if v.message.text then
-        text = text .. "\n text = "..v.message.text
-      end
-      if v.message.action then
-        text = text.."\n"..serpent.block(v.message.action, {comment=false})
-      end
-      if v.message.from then
-        if v.message.from.print_name then
-          text = text.."\n From > \n"..string.gsub(v.message.from.print_name, "_"," ").."["..v.message.from.id.."]"
-        end
-        if v.message.from.username then
-          text = text.."( "..v.message.from.username.." )"
-        end
-        if v.message.from.phone then
-          text = text.."' "..v.message.from.phone.." '"
-        end
-      end
-    end
-    text = text.."\n\n"
-  end
-  local file = io.open("dialog_list.txt", "w")
-  file:write(text)
-  file:flush()
-  file:close()
-  send_document("user#id"..cb_extra.target,"dialog_list.txt", ok_cb, false)--.txt format
-  local file = io.open("dialog_list.json", "w")
-  file:write(json:encode_pretty(result))
-  file:flush()
-  file:close()
-  send_document("user#id"..cb_extra.target,"dialog_list.json", ok_cb, false)--json format
-end
-local function run(msg,matches)
+
+local function chat_list(msg)
     local data = load_data(_config.moderation.data)
-    local receiver = get_receiver(msg)
-    local group = msg.to.id
-    if not is_admin(msg) then
-    	return
-    end
-    if msg.media then
-      	if msg.media.type == 'photo' and redis:get("bot:photo") then
-      		if redis:get("bot:photo") == 'waiting' then
-        		load_photo(msg.id, set_bot_photo, msg)
-      		end
-      	end
-    end
-    if matches[1] == "setbotphoto" then
-    	redis:set("bot:photo", "waiting")
-    	return 'عکس رباتو بفرست بیاد'
-    end
-    if matches[1] == "markread" then
-    	if matches[2] == "on" then
-    		redis:set("bot:markread", "on")
-    		return "Mark read > on"
-    	end
-    	if matches[2] == "off" then
-    		redis:del("bot:markread")
-    		return "Mark read > off"
-    	end
-    	return
-    end
-    if matches[1] == "pm" then
-    	send_large_msg("user#id"..matches[2],matches[3])
-    	return "پیام شما از طریق پیوی ربات ارسال شد"
-    end
-    if matches[1] == "block" then
-    	if is_admin2(matches[2]) then
-    		return "شما نمیتوانید ادمین را بلاک کنید"
-    	end
-    	block_user("user#id"..matches[2],ok_cb,false)
-    	return "یوزر مورد نظر از ربات بلاک شد"
-    end
-    if matches[1] == "unblock" then
-    	unblock_user("user#id"..matches[2],ok_cb,false)
-    	return "یوزر انبلاک شد"
-    end
-    if matches[1] == "import" then--join by group link
-    	local hash = parsed_url(matches[2])
-    	import_chat_link(hash,ok_cb,false)
-    end
-    if matches[1] == "contactlist" then
-      get_contact_list(get_contact_list_callback, {target = msg.from.id})
-      return "I've sent contact list with both json and text format to your private"
-    end
-    if matches[1] == "delcontact" then
-      del_contact("user#id"..matches[2],ok_cb,false)
-      return "User "..matches[2].." removed from contact list"
-    end
-    if matches[1] == "dialoglist" then
-      get_dialog_list(get_dialog_list_callback, {target = msg.from.id})
-      return "I've sent dialog list with both json and text format to your private"
-    end
-    if matches[1] == "whois" then
-      user_info("user#id"..matches[2],user_info_callback,{msg=msg})
-    end
-    return
+        local groups = 'groups'
+        if not data[tostring(groups)] then
+                return 'No groups at the moment'
+        end
+        local message = 'List of Groups:\n*Use /join (ID) to join*\n\n '
+        for k,v in pairs(data[tostring(groups)]) do
+                local settings = data[tostring(v)]['settings']
+                for m,n in pairsByKeys(settings) do
+                        if m == 'set_name' then
+                                name = n
+                        end
+                end
+
+                message = message .. '👥 '.. name .. ' (ID: ' .. v .. ')\n\n '
+        end
+        local file = io.open("./groups/lists/listed_groups.txt", "w")
+        file:write(message)
+        file:flush()
+        file:close()
+        return message
 end
+
+local function run(msg, matches)
+  if msg.to.type ~= 'chat' or is_sudo(msg) or is_admin(msg) and is_realm(msg) then
+	 local data = load_data(_config.moderation.data)
+    if matches[1] == 'join' and data[tostring(matches[2])] then
+        if is_banned(msg.from.id, matches[2]) then
+	    return 'You are banned.'
+	 end
+      if is_gbanned(msg.from.id) then
+            return 'You are globally banned.'
+      end
+      if data[tostring(matches[2])]['settings']['lock_member'] == 'yes' and not is_owner2(msg.from.id, matches[2]) then
+        return 'Group is private.'
+      end
+          local chat_id = "chat#id"..matches[2]
+          local user_id = "user#id"..msg.from.id
+   	  chat_add_user(chat_id, user_id, ok_cb, false)   
+	  local group_name = data[tostring(matches[2])]['settings']['set_name']	
+	  return "Added you to chat:\n\n👥"..group_name.." (ID:"..matches[2]..")"
+        elseif matches[1] == 'join' and not data[tostring(matches[2])] then
+		
+         	return "Chat not found."
+        end
+     if matches[1] == 'chats'then
+       if is_admin(msg) and msg.to.type == 'chat' then
+         return chat_list(msg)
+       elseif msg.to.type ~= 'chat' then
+         return chat_list(msg)
+       end      
+     end
+     if matches[1] == 'chatlist'then
+       if is_admin(msg) and msg.to.type == 'chat' then
+         send_document("chat#id"..msg.from.id, "./groups/lists/listed_groups.txt", ok_cb, false)
+       elseif msg.to.type ~= 'chat' then
+         send_document("user#id"..msg.from.id, "./groups/lists/listed_groups.txt", ok_cb, false) 
+       end      
+     end
+end
+end
+
 return {
-  patterns = {
-	"^[!/](pm) (%d+) (.*)$",
-	"^[!/](import) (.*)$",
-	"^[!/](unblock) (%d+)$",
-	"^[!/](block) (%d+)$",
-	"^[!/](markread) (on)$",
-	"^[!/](markread) (off)$",
-	"^[!/](setbotphoto)$",
-	"%[(photo)%]",
-	"^[!/](contactlist)$",
-	"^[!/](dialoglist)$",
-	"^[!/](delcontact) (%d+)$",
-	"^[!/](whois) (%d+)$"
-  },
-  run = run,
+    patterns = {
+      "^[/!](chats)$",
+      "^[/!](chatlist)$",
+      "^[/!](join) (.*)$",
+      "^[/!](kickme) (.*)$",
+      "^!!tgservice (chat_add_user)$"
+    },
+    run = run,
 }
---Copyright and edit; @behroozyaghi
---Persian Translate; @behroozyaghi
---ch : @nod32team
---کپی بدون ذکر منبع حرام است
+end
