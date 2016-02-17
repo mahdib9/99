@@ -238,7 +238,6 @@ function create_config( )
     "owners",
     "arabic_lock",
     "anti_bot"
-    "set",
     "get",
     "broadcast",
     "download_media",
