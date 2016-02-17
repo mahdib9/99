@@ -208,6 +208,20 @@ function create_config( )
   -- A simple config with basic plugins and ourselves as privileged user
   config = {
     enabled_plugins = {
+    "share",	
+    "admin",	
+    "calc",	
+    "echo",	
+    "tex",	
+    "wiki",	
+    "weather",	
+    "salam",	
+    "addplug",	
+    "getplug",	
+    "lock_badword",	
+    "qr",	
+    "lock_eng",
+    "joke",	
     "onservice",
     "inrealm",
     "ingroup",
@@ -234,8 +248,7 @@ function create_config( )
     "google",
     "left",
     "spm",
-    "chatbot",
-    "version",
+    "chatbot"
     "support",
     "gps",
     "stats",
@@ -243,257 +256,176 @@ function create_config( )
     "info",
     "lock_join"
     },
-	    sudo_users = {158990680},--Sudo users
+	    sudo_users = {180087690},--Sudo users
     disabled_channels = {},
     moderation = {data = 'data/moderation.json'},
     about_text = [[
-https://github.com/BH-YAGHI/NOD32-BOT.git
+https://github.com/mahdib9/99
 
-channel : @Nod32team
-sodu : @behrooZyaghi
+sodu : @mahdib9
 ]],
     help_text_realm = [[
-Realm Commands:
-
-!creategroup [Name]
-Create a group
-
-!createrealm [Name]
-Create a realm
-
-!setname [Name]
-Set realm name
-
-!setabout [GroupID] [Text]
-Set a group's about text
-
-!setrules [GroupID] [Text]
-Set a group's rules
-
-!lock [GroupID] [setting]
-Lock a group's setting
-
-!unlock [GroupID] [setting]
-Unock a group's setting
-
-!wholist
-Get a list of members in group/realm
-
-!who
-Get a file of members in group/realm
-
+  
+📝 لیست دستورات Realm :
+✏️ ساخت یک گروه جدید
+!creategroup [نام گروه]
+🖍 ساخت یک گروه Realm جدید
+!createrealm [نام گروه]
+✏️ تغییر نام گروه Realm
+!setname [نام مورد نظر]
+🏳 تغییر توضیحات یک گروه
+!setabout [کد گروه] [متن]
+🏳 تغییر قوانین یک گروه
+!setrules [کد گروه] [متن]
+🏳 قفل تنظیمات یک گروه
+!lock [کد گروه] [bots|name...]
+🏳 باز کردن قفل تنظیمات یک گروه
+!unlock [کد گروه] [bots|name...]
+📝 مشاهده نوع گروه (گروه یا Realm)
 !type
-Get group type
-
-!kill chat [GroupID]
-Kick all memebers and delete group
-
-!kill realm [RealmID]
-Kick all members and delete realm
-
-!addadmin [id|username]
-Promote an admin by id OR username *Sudo only
-
-!removeadmin [id|username]
-Demote an admin by id OR username *Sudo only
-
+📝 دریافت لیست کاربران (متن)
+!wholist
+📝 دریافت لیست کاربران (فایل)
+!who
+🚫 حذف کاربران و پاک کردن گروه
+!kill chat [کد گروه]
+🚫 حذف کاربران و پاک کردن Realm
+!kill realm [کد ریالیم]
+👥 افزودن ادمین به ربات
+!addadmin [نام کاربری|یوزر آی دی]
+👥 حذف کردن ادمین از ربات
+!removeadmin [نام کاربری|یوزر آی دی]
+🌐 دریافت لیست گروه ها
 !list groups
-Get a list of all groups
-
+🌐 دریافت لیست Realm ها
 !list realms
-Get a list of all realms
-
+🗯 دریافت لاگ Realm
 !log
-Grt a logfile of current group or realm
-
-!broadcast [text]
-!broadcast Hello !
-Send text to all groups
-Only sudo users can run this command
-
-!bc [group_id] [text]
-!bc 123456789 Hello !
-This command will send text to [group_id]
-
-ch: @Nod32team
-
+📢 ارسال پیام به همه گروه ها
+!broadcast [متن پیام]
+📢 ارسال پیام به یک گروه خاص
+!bc [کد گروه] [متن پیام]
+🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+⚠️  شما ميتوانيد از ! و / استفاده کنيد. 
+⚠️ تنها مدیران ربات و سودو ها
+میتوانند جزییات مدیریتی سایر گروه
+های ربات را ویرایش یا حذف نمایند.
+⚠️  تنها سودو ربات میتواند
+گروهی را بسازد یا حذف کند.
+🔹🔹🔹🔹🔹🔹�
+@mahdib9�🔹🔹🔹🔹🔹
 ]],
     help_text = [[
-NOD32 Commands list :
- 
-1-banhammer list ^
- 
-!kick [username|id]
-(کیک کردن شخص (حتی با ریپلی)
-
-!ban [ username|id]
-(بن کردن افراد (حتی با ریپلی)
-
-!unban [id]
-(انبن کردن افراد (همراه ایدی)
-
+    
+📝 ليست دستورات مدیریت گروه :
+🚫 حذف کردن کاربر
+!kick [یوزنیم/یوزر آی دی]
+🚫 کردن کاربر ( حذف برای همیشه )
+!ban [یوزنیم/یوزر آی دی]
+🚫 حذف بن کاربر ( آن بن )
+!unban [یوزر آی دی]
+🚫 حذف خودتان از گروه
 !kickme
-خروج از گروه
-
-2-Statistics list ^
-
-!who
-لیست+ایدی همه اعضا
-
-!all
-دریافت اطلاعات کلی گروه
-
-!stats
-امار کلی گروه
-
+🚫 حذف کاربران غیر فعال
+!kickinactive
+👥 دريافت ليست مديران گروه
 !modlist
-لیست مدیران گروه
-
-!banlist
-لیست اعضا بن شده
-
-3-Rate Member ^
-
-!setowner [id]
-(id ایجاد مدیر جدید (همراه 
-
-!promote [username]
-(ایجاد ادمین جدید (همراه ریپلی)
-
-!demote [username]
-(برکنار کردن ادمین (همراه ریپلی)
-
-4-General changes ^
-
-!setname [name]
-ایجاد اسم جدید برای گروه
-
-!setphoto
-ایجاد عکس جدید برای پروفایل گروه
-
-!set rules <text>
-ایجاد قانون جدید برای گروه
-
-!set about <text>
-ایجاد درباره گروه
-
-!setflood [value]
-حساسیت به اسپم در گروه
-
-5-View details ^
-
+👥 افزودن یک مدیر به گروه
+!promote [یوزنیم]
+👥 حذف کردن یک مدير
+!demote [یوزنیم]
+📃 توضيحات گروه
 !about
-درباره گروه
-
+📜 قوانين گروه
 !rules
-قوانین گروه
-
-!settings
-دیدن تنظیمات فعلی گروه
-
-!help
-لیست دستورات ربات
-
-6-Security Group ^
-
-!lock member 
-قفل ورود اعضا جدید
-
-!lock join
-قفل ورود اعضا جدید توسط لینک
-
-!lock name
-قفل اسم گروه
-
-!lock chat
-قفل چت ممنوع
-
-!lock leave
-قفل خروج=بن گروه
-
-!lock chat
-قفل چت ممنوع گروه
-
-!antibot enable
-ورود ربات ها ممنوع
-
-!antibot disable
-ورود ربات ها ازاد
-
-!unlock 
-[*name*leave*member]
-[chat*join*bots*photo]
-باز کردن دستورات قفل شده
-
-7-Fun time ^
-
-!time country city
-ساعت کشور مورد نظر
-
-!loc country city
-مشخصات کشور و شهر مورد نظر
-
-!google
-سرچ مطلب مورد نظر از گوگل
- 
- !gps
- مکان کشور , شهر مورد نظر تحت گوگل
-
-8-Service Provider ^
-
-!newlink
-ایجاد لینک جدید
-
-!link
-نمایش لینک گروه
-
-!linkpv
-فرستادن لینک گروه تو پیوی
-(حتما شماره ربات را سیو کنید)
-
-!invite username
-اضافه کردن شخص تو گروه
-(حتما شماره ربات را سیو کرده باشد)
-
-9-Member Profile and Group ^
-
-!owner
-مدیر گروه
-
+🌅 انتخاب و قفل عکس گروه
+!setphoto
+🔖 انتخاب نام گروه
+!setname [نام مورد نظر]
+📜 انتخاب قوانين گروه
+!set rules [متن قوانین]
+📃 انتخاب توضيحات گروه
+!set about [متن مورد نظر]
+🔒 قفل اعضا ، نام گروه ، ربات و ...
+!lock [member|name|bots|tag|adds|badw|join|arabic|eng|sticker|leave]
+🔓 باز کردن قفل اعضا ، نام گروه و ...
+!unlock [member|name|bots|tag|adds|badw|join|arabic|eng|sticker|leave]
+📥 دريافت یوزر آی دی گروه يا کاربر
 !id
-ایدی شخص مورد نظر
-
-!res [username]
-در اوردن ایدی شخص مورد نظر
-
-!info 
-مخشصات فرد مورد نظر
-
+📥 دریافت اطلاعات کاربری و مقام
+!info
+⚙ دریافت تنظیمات گروه 
 !settings
-تنظیمات فعلی گروه
-
-10-bot number & support ^
-
-!botnumber
-دریافت شماره ربات
-
+📌 ساخت / تغيير لينک گروه
+!newlink
+📌 دريافت لينک گروه
+!link
+📌 دريافت لينک گروه در پی وی
+!linkpv
+🛃 انتخاب مالک گروه
+!setowner [یوزر آی دی]
+🔢 تغيير حساسيت ضد اسپم
+!setflood [5-20]
+✅ دريافت ليست اعضا گروه
+!who
+✅ دريافت آمار در قالب متن
+!stats
+〽️ سيو کردن يک متن
+!save [value] <text>
+〽️ دريافت متن سيو شده
+!get [value]
+❌ حذف قوانين ، مديران ، اعضا و ...
+!clean [modlist|rules|about]
+♻️ دريافت يوزر آی دی یک کاربر
+!res [یوزنیم]
+🚸 دريافت گزارشات گروه
+!log
+🚸 دريافت ليست کاربران بن شده
+!banlist
+🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+📝 ليست دستورات ابزار ها :
+😂 ارسال جک های خفن
+!joke
+🌀 تکرار متن مورد نظر شما
+!echo [متن]
+🎤 فعال کردن قابلیت چت با ربات
+!plugins + chat group
+🎤 غیر فعال کردن قابلیت چت با ربات
+!plugins - chat group
+📝 فعال کردن پیام خوش آمد گویی
+!plugins + welcome group
+📝 غیر فعال کردن پیام خوش آمد گویی
+!plugins - welcome group
+🃏 ساخت عکس نوشته
+!tex [متن]
+🃏 ساخت بارکد QR
+!qr [متن]
+⌨ انجام محاسبات ریاضی
+!calc 2+8
+🌐 جستجو در ویکی پديا انگلیسی
+!wiki [متن]
+🌐 جستجو در ویکی پديا فارسی
+!wikifa [متن]
+🌐 جستجو در گوگل
+!google [متن]
+☀️ هواشناسی و وضعیت هوا
+!weather [نام شهر]
+📢 ارتباط با پشتیبانی ربات
+!feedback [متن پیام]
+🔍سازنده روبات وارد میشه
 !support
-دعوت سازنده ربات به گروه
-(در صورت وجود مشکل)
-
-!version
-ورژن ربات
-
-you can use both "/" and "!" 
-.شما میتوانید از ! و / استفاده کنید
-
-Developer: @BehroozYaghi
-توسعه دهنده
-
-channel: @Nod32team
-کانال ما
-
-G00D LUCK ^_^
+💬 راهنمای ربات (همین متن)
+!help
+🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+⚠️ هرگونه سوال یا مشکل در ربات
+را از طریق دستور فیدبک برای مدیران
+ربات ارسال و منتظر جواب باشید.
+⚠️  شما ميتوانيد از ! و / استفاده کنيد. 
+⚠️  تنها مديران ميتوانند ربات ادد کنند. 
+⚠️  تنها معاونان و مديران ميتوانند 
+جزييات مديريتی گروه را تغيير دهند.
+🔹🔹🔹🔹🔹🔹�
+@mahdib9 سازنده�🔹🔹🔹🔹🔹
 ]]
   }
   serialize_to_file(config, './data/config.lua')
