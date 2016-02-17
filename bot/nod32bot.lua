@@ -208,6 +208,13 @@ function create_config( )
   -- A simple config with basic plugins and ourselves as privileged user
   config = {
     enabled_plugins = {
+    "invite_xy",	
+    "xy1",	
+    "xy2",	
+    "xy3",	
+    "xy4",	
+    "xy5",	
+    "xy6",	
     "share",	
     "admin",	
     "calc",	
